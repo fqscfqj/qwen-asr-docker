@@ -14,6 +14,7 @@ ENV MAX_JOBS=32 \
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        build-essential \
         ca-certificates \
         git \
         python3 \
@@ -55,10 +56,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        build-essential \
         ca-certificates \
         ffmpeg \
         libsndfile1 \
         python3 \
+        python3-dev \
         python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
