@@ -2,7 +2,7 @@ services:
   asr:
     build:
       context: .
-    image: qwen3-asr-openai:latest
+    image: ghcr.io/fqscfqj/qwen-asr-docker:latest
     gpus: all
     env_file:
       - .env
