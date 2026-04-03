@@ -32,6 +32,12 @@
 - Docker Engine + Docker Compose
 - 正常可用的 NVIDIA Container Toolkit
 
+## 镜像说明
+
+- Docker 镜像只包含服务运行时和推理依赖，不会在构建阶段预打包 ASR 模型。
+- 模型会在容器启动时按需下载到 `ASR_MODELS_DIR`，默认落在 `/models`。
+- `BUNDLE_FLASH_ATTENTION` / `bundle_flash_attention` 只控制是否在构建时额外编译并安装 FlashAttention，不影响默认启动方式。
+
 ## 快速开始
 
 1. 复制环境变量模板：
@@ -55,6 +61,8 @@ ASR_PORT=8000
 ```bash
 docker compose up --build
 ```
+
+首次启动时，如果 `./models` 下还没有对应权重，容器会自动下载到该目录。
 
 4. 检查健康状态：
 
@@ -156,7 +164,7 @@ curl http://127.0.0.1:8000/v1/audio/transcriptions \
 工作流输入：
 
 - `tag`：可选，自定义额外标签
-- `bundle_flash_attention`：构建时是否安装 FlashAttention
+- `bundle_flash_attention`：构建时是否额外编译并安装 FlashAttention，默认关闭以减小镜像体积
 
 默认会推送：
 
