@@ -8,11 +8,6 @@ on:
         required: false
         default: ""
         type: string
-      push_latest:
-        description: "额外推送 latest 标签"
-        required: false
-        default: false
-        type: boolean
       bundle_flash_attention:
         description: "构建时安装 FlashAttention"
         required: false
@@ -36,23 +31,14 @@ jobs:
         shell: bash
         env:
           EXTRA_TAG: ${{ inputs.tag }}
-          PUSH_LATEST: ${{ inputs.push_latest }}
         run: |
           set -euo pipefail
 
           IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
-          REF_NAME="${GITHUB_REF_NAME,,}"
-          SAFE_REF="$(echo "$REF_NAME" | tr '/ _' '---')"
-          SHA_TAG="sha-${GITHUB_SHA::7}"
-
-          TAGS="${IMAGE}:${SHA_TAG}"$'\n'"${IMAGE}:${SAFE_REF}"
+          TAGS="${IMAGE}:latest"
 
           if [ -n "${EXTRA_TAG}" ]; then
             TAGS="${TAGS}"$'\n'"${IMAGE}:${EXTRA_TAG}"
-          fi
-
-          if [ "${PUSH_LATEST}" = "true" ]; then
-            TAGS="${TAGS}"$'\n'"${IMAGE}:latest"
           fi
 
           {

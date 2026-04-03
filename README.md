@@ -156,13 +156,15 @@ curl http://127.0.0.1:8000/v1/audio/transcriptions \
 工作流输入：
 
 - `tag`：可选，自定义额外标签
-- `push_latest`：是否额外推送 `latest`
 - `bundle_flash_attention`：构建时是否安装 FlashAttention
 
-默认会至少推送两个标签：
+默认会推送：
 
-- `ghcr.io/<owner>/<repo>:sha-<short-sha>`
-- `ghcr.io/<owner>/<repo>:<branch-name>`
+- `ghcr.io/<owner>/<repo>:latest`
+
+如果你在触发 workflow 时填写了 `tag`，还会额外推送：
+
+- `ghcr.io/<owner>/<repo>:<your-tag>`
 
 需要的仓库权限：
 

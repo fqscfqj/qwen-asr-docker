@@ -2,7 +2,7 @@ services:
   asr:
     build:
       context: .
-    image: qwen3-asr-openai:local
+    image: qwen3-asr-openai:latest
     gpus: all
     env_file:
       - .env
