@@ -137,6 +137,7 @@ curl http://127.0.0.1:8000/v1/audio/transcriptions \
 限制：
 
 - `model` 仅接受 `qwen3-asr-0.6b` / `qwen3-asr-1.7b`
+- `language` 支持传入模型语言全称（如 `English`）或常见 ISO 代码（如 `en`、`zh`、`ja`）
 - `temperature` 仅接受空值或 `0`
 - aligner 关闭时，请求时间戳、`srt`、`vtt` 会返回 `400`
 

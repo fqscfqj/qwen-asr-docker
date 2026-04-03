@@ -16,6 +16,7 @@ from starlette.datastructures import UploadFile
 from .catalog import ALLOWED_RESPONSE_FORMATS, ALLOWED_TIMESTAMP_GRANULARITIES
 from .config import Settings
 from .formatters import build_segments, build_verbose_json, format_srt, format_vtt, words_from_time_stamps
+from .language import normalize_language
 from .model_manager import ModelManager
 
 
@@ -182,7 +183,7 @@ def create_app(settings: Settings | None = None, model_manager: ModelManager | N
 
         _normalize_temperature(form.get("temperature"))
 
-        language = str(form.get("language") or "").strip() or None
+        language = normalize_language(str(form.get("language") or "").strip() or None)
         prompt = str(form.get("prompt") or "").strip() or None
 
         suffix = Path(upload.filename or "audio.bin").suffix or ".bin"

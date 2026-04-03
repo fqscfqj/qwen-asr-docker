@@ -27,6 +27,7 @@ class FakeTranscription:
 class FakeManager:
     def __init__(self) -> None:
         self.is_ready = True
+        self.last_transcribe_kwargs: dict[str, object] | None = None
 
     async def start(self) -> None:
         self.is_ready = True
@@ -34,7 +35,8 @@ class FakeManager:
     async def stop(self) -> None:
         self.is_ready = False
 
-    async def transcribe(self, **_: object) -> list[FakeTranscription]:
+    async def transcribe(self, **kwargs: object) -> list[FakeTranscription]:
+        self.last_transcribe_kwargs = kwargs
         return [
             FakeTranscription(
                 language="English",
@@ -108,3 +110,22 @@ def test_transcription_rejects_timestamp_requests_when_aligner_disabled() -> Non
 
     assert response.status_code == 400
     assert "ASR_ENABLE_ALIGNER=true" in response.json()["detail"]
+
+
+def test_transcription_normalizes_language_alias() -> None:
+    settings = Settings.from_env({"ASR_ENABLED_MODELS": "0.6b"})
+    manager = FakeManager()
+    client = TestClient(create_app(settings=settings, model_manager=manager))
+
+    response = client.post(
+        "/v1/audio/transcriptions",
+        files={"file": ("sample.wav", _wav_bytes(), "audio/wav")},
+        data={
+            "model": "qwen3-asr-0.6b",
+            "language": "En",
+        },
+    )
+
+    assert response.status_code == 200
+    assert manager.last_transcribe_kwargs is not None
+    assert manager.last_transcribe_kwargs["language"] == "English"
